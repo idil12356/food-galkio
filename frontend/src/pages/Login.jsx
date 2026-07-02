@@ -17,7 +17,10 @@ export default function Login() {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await axios.post('/api/auth/login', form);
+      const res = await axios.post(
+  `${import.meta.env.VITE_API_URL}/api/auth/login`,
+  form
+);
       login(res.data.user, res.data.token);
       toast.success(`Welcome back, ${res.data.user.name}! 👋`);
       navigate(res.data.user.role === 'admin' ? '/admin' : '/');
