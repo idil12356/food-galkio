@@ -37,12 +37,37 @@ export default function Cart() {
     if (payMethod==='card' && (!cardNum||!cardExp||!cardCvc)) return toast.error('Fill card details');
     try {
       setPlacing(true);
-      const res = await axios.post('/api/orders', {
-        items: cart.map(i=>({ menuItem:i._id, name:i.name, price:i.price, quantity:i.quantity, image:i.image })),
-        totalAmount:total, deliveryFee,
-        address:{ street:address.street, city:address.city, zipCode:address.zipCode, fullAddress:`${address.street}, ${address.city}${address.zipCode?' '+address.zipCode:''}` },
-        payment:{ method:payMethod, provider:payMethod==='mobile_money'?mobileProvider:payMethod==='card'?'Credit Card':'Cash', phone:mobilePhone, status:payMethod==='cash'?'pending':'paid' }
-      });
+      const res = await axios.post(
+  `${import.meta.env.VITE_API_URL}/api/orders`,
+  {
+    items: cart.map(i => ({
+      menuItem: i._id,
+      name: i.name,
+      price: i.price,
+      quantity: i.quantity,
+      image: i.image
+    })),
+    totalAmount: total,
+    deliveryFee,
+    address: {
+      street: address.street,
+      city: address.city,
+      zipCode: address.zipCode,
+      fullAddress: `${address.street}, ${address.city}${address.zipCode ? ' ' + address.zipCode : ''}`
+    },
+    payment: {
+      method: payMethod,
+      provider:
+        payMethod === 'mobile_money'
+          ? mobileProvider
+          : payMethod === 'card'
+          ? 'Credit Card'
+          : 'Cash',
+      phone: mobilePhone,
+      status: payMethod === 'cash' ? 'pending' : 'paid'
+    }
+  }
+);
       if (updateUser) updateUser({ hasOrdered:true });
       clearCart();
       toast.success('Order placed! 🎉');

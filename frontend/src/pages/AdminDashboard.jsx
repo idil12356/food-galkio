@@ -33,7 +33,9 @@ export default function AdminDashboard() {
 
   const fetchStats = async () => {
     try {
-      const res = await axios.get(`/api/admin/stats?period=${period}`);
+      const res = await axios.get(
+  `${import.meta.env.VITE_API_URL}/api/admin/stats?period=${period}`
+);
       setStats(res.data);
     } catch { toast.error('Failed to load stats'); }
     finally { setLoading(false); }

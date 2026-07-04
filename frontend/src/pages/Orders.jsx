@@ -34,7 +34,9 @@ export default function Orders() {
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get('/api/orders/my-orders');
+      const res = await axios.get(
+  `${import.meta.env.VITE_API_URL}/api/orders/my-orders`
+);
       setOrders(res.data);
       if (res.data.length > 0) setSelected(res.data[0]);
     } catch { toast.error('Failed to load orders'); }
@@ -45,7 +47,9 @@ export default function Orders() {
     if (!confirm('Cancel this order?')) return;
     try {
       setCancelling(true);
-      const res = await axios.put(`/api/orders/${id}/cancel`);
+      const res = await axios.put(
+  `${import.meta.env.VITE_API_URL}/api/orders/${id}/cancel`
+);
       setOrders(prev => prev.map(o => o._id === id ? res.data : o));
       setSelected(res.data);
       toast.success('Order cancelled');

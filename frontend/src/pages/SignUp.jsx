@@ -19,7 +19,14 @@ export default function SignUp() {
     if (form.password.length < 6) return toast.error('Password must be at least 6 characters');
     try {
       setLoading(true);
-      const res = await axios.post('/api/auth/register', { name:form.name, email:form.email, password:form.password });
+      const res = await axios.post(
+  `${import.meta.env.VITE_API_URL}/api/auth/register`,
+  {
+    name: form.name,
+    email: form.email,
+    password: form.password
+  }
+);
       login(res.data.user, res.data.token);
       toast.success('Account created! Welcome 🎉');
       navigate('/');

@@ -13,7 +13,7 @@ export default function AdminUsers() {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get('/api/admin/users');
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/admin/users`);
       setUsers(res.data);
     } catch { toast.error('Failed to load users'); }
     finally { setLoading(false); }
@@ -22,7 +22,7 @@ export default function AdminUsers() {
   const deleteUser = async (id) => {
     if (!confirm('Delete this user?')) return;
     try {
-      await axios.delete(`/api/admin/users/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/admin/users/${id}`);
       setUsers(prev => prev.filter(u => u._id !== id));
       toast.success('User deleted');
     } catch { toast.error('Failed to delete'); }

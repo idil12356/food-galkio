@@ -20,7 +20,7 @@ export default function Home() {
   const [popular, setPopular] = useState(DEMO);
 
   useEffect(() => {
-    axios.get('/api/menu').then(res => { if (res.data?.length > 0) setPopular(res.data.slice(0,4)); }).catch(()=>{});
+    axios.get(`${import.meta.env.VITE_API_URL}/api/menu`).then(res => { if (res.data?.length > 0) setPopular(res.data.slice(0,4)); }).catch(()=>{});
   }, []);
 
   return (

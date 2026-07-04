@@ -23,7 +23,10 @@ export default function ForgotPassword() {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await axios.post('/api/auth/forgot-password', { email });
+      const res = await axios.post(
+  `${import.meta.env.VITE_API_URL}/api/auth/forgot-password`,
+  { email }
+);
       setResetToken(res.data.resetToken);
       setEmailSent(res.data.emailSent);
       setStep('code');
@@ -39,7 +42,13 @@ export default function ForgotPassword() {
     if (newPass.length < 6) return toast.error('Min 6 characters');
     try {
       setLoading(true);
-      await axios.post('/api/auth/reset-password', { token: code.trim().toUpperCase(), newPassword: newPass });
+      await axios.post(
+  `${import.meta.env.VITE_API_URL}/api/auth/reset-password`,
+  {
+    token: code.trim().toUpperCase(),
+    newPassword: newPass
+  }
+);
       toast.success('Password reset successfully! 🎉');
       navigate('/login');
     } catch (err) { toast.error(err.response?.data?.message || 'Invalid or expired code'); }

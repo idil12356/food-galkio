@@ -31,7 +31,9 @@ export default function Menu() {
   const fetchMenu = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`/api/menu?category=${cat}`);
+      const res = await axios.get(
+  `${import.meta.env.VITE_API_URL}/api/menu?category=${cat}`
+);
       setItems(res.data);
     } catch { setItems(DEMO.filter(i => cat==='All'||i.category===cat)); }
     finally { setLoading(false); }

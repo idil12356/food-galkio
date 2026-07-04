@@ -32,7 +32,9 @@ export default function OrderDetail() {
 
   const fetchOrder = async () => {
     try {
-      const res = await axios.get(`/api/orders/${id}`);
+      const res = await axios.get(
+  `${import.meta.env.VITE_API_URL}/api/orders/${id}`
+);
       setOrder(res.data);
     } catch { navigate('/orders'); }
     finally { setLoading(false); }
