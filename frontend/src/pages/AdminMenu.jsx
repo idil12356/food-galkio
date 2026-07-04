@@ -20,10 +20,14 @@ export default function AdminMenu() {
 
   const fetchMenu = async () => {
     try {
-      const res = await axios.get('/api/menu/all');
+      const res = await axios.get(
+  `${import.meta.env.VITE_API_URL}/api/menu/all`
+);
       setItems(res.data);
     } catch {
-      const res = await axios.get('/api/menu');
+      const res = await axios.get(
+  `${import.meta.env.VITE_API_URL}/api/menu`
+);
       setItems(res.data);
     }
   };
@@ -63,11 +67,27 @@ export default function AdminMenu() {
       else if (form.imagePreview) data.append('imageUrl', form.imagePreview);
 
       if (editItem) {
-        const res = await axios.put(`/api/menu/${editItem._id}`, data, { headers:{'Content-Type':'multipart/form-data'} });
+        await axios.put(
+  `${import.meta.env.VITE_API_URL}/api/menu/${editItem._id}`,
+  data,
+  {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  }
+);
         setItems(prev => prev.map(i => i._id===editItem._id ? res.data : i));
         toast.success('Item updated ✅');
       } else {
-        const res = await axios.post('/api/menu', data, { headers:{'Content-Type':'multipart/form-data'} });
+        await axios.post(
+  `${import.meta.env.VITE_API_URL}/api/menu`,
+  data,
+  {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  }
+);
         setItems(prev => [...prev, res.data]);
         toast.success('Item added! ✅');
       }
@@ -79,7 +99,9 @@ export default function AdminMenu() {
   const handleDelete = async (id) => {
     if (!confirm('Delete this item?')) return;
     try {
-      await axios.delete(`/api/menu/${id}`);
+      await axios.delete(
+  `${import.meta.env.VITE_API_URL}/api/menu/${id}`
+);
       setItems(prev => prev.filter(i => i._id!==id));
       toast.success('Item deleted');
     } catch { toast.error('Failed to delete'); }
