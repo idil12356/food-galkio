@@ -67,7 +67,7 @@ export default function AdminMenu() {
       else if (form.imagePreview) data.append('imageUrl', form.imagePreview);
 
       if (editItem) {
-        await axios.put(
+        const res = await axios.put(
   `${import.meta.env.VITE_API_URL}/api/menu/${editItem._id}`,
   data,
   {
@@ -79,7 +79,7 @@ export default function AdminMenu() {
         setItems(prev => prev.map(i => i._id===editItem._id ? res.data : i));
         toast.success('Item updated ✅');
       } else {
-        await axios.post(
+        const res = await axios.post(
   `${import.meta.env.VITE_API_URL}/api/menu`,
   data,
   {
@@ -112,17 +112,17 @@ export default function AdminMenu() {
 
   return (
     <div>
-      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'24px', flexWrap:'wrap', gap:'14px' }}>
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'24px', flexWrap:'wrap', gap:'14px' }} className="menu-header">
         <div>
-          <h2 style={{ fontSize:'24px', fontWeight:700, color:'var(--text)', marginBottom:'4px' }}>
+          <h2 style={{ fontSize:'24px', fontWeight:700, color:'var(--text)', marginBottom:'4px' }} className="menu-title">
             Menu <span style={{ color:'#e84040' }}>Management</span>
           </h2>
           <p style={{ color:'var(--text2)', fontSize:'13px' }}>Curate your restaurant's offerings.</p>
         </div>
-        <div style={{ display:'flex', gap:'12px', alignItems:'center' }}>
+        <div style={{ display:'flex', gap:'12px', alignItems:'center' }} className="menu-actions">
           <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t.searchItems}
-            style={{ ...inp, width:'220px', border:'1px solid var(--card-border)', boxShadow:'var(--card-shadow)' }}/>
-          <button onClick={openAdd} style={{ padding:'10px 22px', background:'#e84040', border:'none', borderRadius:'10px', color:'#fff', fontSize:'13px', fontWeight:600, cursor:'pointer' }}>{t.addItem}</button>
+            style={{ ...inp, width:'220px', border:'1px solid var(--card-border)', boxShadow:'var(--card-shadow)' }} className="menu-search"/>
+          <button onClick={openAdd} style={{ padding:'10px 22px', background:'#e84040', border:'none', borderRadius:'10px', color:'#fff', fontSize:'13px', fontWeight:600, cursor:'pointer', whiteSpace:'nowrap' }}>{t.addItem}</button>
         </div>
       </div>
 
@@ -153,9 +153,9 @@ export default function AdminMenu() {
 
       {/* Modal */}
       {showModal && (
-        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.7)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:9999, backdropFilter:'blur(4px)' }}
+        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.7)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:9999, backdropFilter:'blur(4px)', padding:'16px', boxSizing:'border-box' }}
           onClick={()=>setShowModal(false)}>
-          <div style={{ background:'var(--card)', borderRadius:'18px', padding:'28px', width:'100%', maxWidth:'520px', border:'1px solid var(--card-border)', boxShadow:'var(--card-shadow)', maxHeight:'90vh', overflowY:'auto' }}
+          <div style={{ background:'var(--card)', borderRadius:'18px', padding:'28px', width:'100%', maxWidth:'520px', border:'1px solid var(--card-border)', boxShadow:'var(--card-shadow)', maxHeight:'90vh', overflowY:'auto', boxSizing:'border-box' }} className="menu-modal"
             onClick={e=>e.stopPropagation()}>
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'22px' }}>
               <h3 style={{ color:'var(--text)', fontSize:'18px', fontWeight:700 }}>{editItem ? t.edit : t.newDish}</h3>
@@ -167,7 +167,7 @@ export default function AdminMenu() {
                 <label style={{ color:'var(--text2)', fontSize:'12px', fontWeight:500 }}>{t.dishName}</label>
                 <input value={form.name} onChange={e=>setForm(f=>({...f,name:e.target.value}))} placeholder="e.g., Truffle Burger" style={inp}/>
               </div>
-              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'12px' }}>
+              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'12px' }} className="menu-form-row">
                 <div style={{ display:'flex', flexDirection:'column', gap:'7px' }}>
                   <label style={{ color:'var(--text2)', fontSize:'12px', fontWeight:500 }}>{t.price}</label>
                   <input type="number" value={form.price} onChange={e=>setForm(f=>({...f,price:e.target.value}))} placeholder="12.99" step="0.01" style={inp}/>
@@ -210,6 +210,20 @@ export default function AdminMenu() {
           </div>
         </div>
       )}
+
+      <style>{`
+        @media (max-width: 900px) {
+          .grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+        @media (max-width: 640px) {
+          .grid-4 { grid-template-columns: 1fr !important; }
+          .menu-actions { width: 100%; }
+          .menu-search { width: 100% !important; }
+          .menu-actions button { width: 100%; }
+          .menu-title { font-size: 20px !important; }
+          .menu-form-row { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </div>
   );
 }

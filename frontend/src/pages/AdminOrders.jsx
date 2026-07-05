@@ -18,7 +18,6 @@ export default function AdminOrders() {
 
   useEffect(() => {
     fetchOrders();
-    // Poll every 30 seconds for new orders
     const interval = setInterval(fetchOrders, 30000);
     return () => clearInterval(interval);
   }, [filter]);
@@ -30,7 +29,6 @@ export default function AdminOrders() {
 );
       const fetchedOrders = res.data;
 
-      // Detect new orders
       if (prevOrderIds.current.size > 0) {
         const newOnes = fetchedOrders.filter(o => !prevOrderIds.current.has(o._id));
         if (newOnes.length > 0) {
@@ -69,14 +67,26 @@ export default function AdminOrders() {
   ];
 
   const displayed = filter === 'all' ? orders : orders.filter(o => o.status === filter);
+  const STATUS_OPTIONS = ['pending','confirmed','preparing','out_for_delivery','delivered','cancelled'];
+
+  const statusSelect = (o) => {
+    const userCancelled = o.status==='cancelled' && o.cancelledBy==='user';
+    if (userCancelled) return <span style={{ color:'var(--text3)', fontSize:'12px', fontStyle:'italic' }}>🔒 Locked</span>;
+    return (
+      <select value={o.status} onChange={e=>updateStatus(o._id,e.target.value,o.cancelledBy)}
+        style={{ background:'var(--input-bg)', border:'1px solid var(--border)', borderRadius:'8px', color:'var(--text)', padding:'6px 10px', fontSize:'12px', cursor:'pointer', width:'100%' }}>
+        {STATUS_OPTIONS.map(s=>(<option key={s} value={s}>{s}</option>))}
+      </select>
+    );
+  };
 
   return (
     <div>
       {/* Header with NEW badge */}
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'20px', flexWrap:'wrap', gap:'12px' }}>
-        <div style={{ display:'flex', alignItems:'center', gap:'14px' }}>
+        <div style={{ display:'flex', alignItems:'center', gap:'14px', flexWrap:'wrap' }}>
           <div>
-            <h2 style={{ fontSize:'24px', fontWeight:700, color:'var(--text)', marginBottom:'4px' }}>
+            <h2 style={{ fontSize:'24px', fontWeight:700, color:'var(--text)', marginBottom:'4px' }} className="orders-title">
               Order <span style={{ color:'#e84040' }}>Management</span>
             </h2>
             <p style={{ color:'var(--text2)', fontSize:'13px' }}>Track and manage customer orders.</p>
@@ -104,9 +114,9 @@ export default function AdminOrders() {
         ))}
       </div>
 
-      {/* Table */}
-      <div style={{ background:'var(--card)', borderRadius:'14px', border:'1px solid var(--card-border)', overflow:'auto', boxShadow:'var(--card-shadow)' }}>
-        <table style={{ width:'100%', borderCollapse:'collapse' }}>
+      {/* Table — desktop/tablet */}
+      <div style={{ background:'var(--card)', borderRadius:'14px', border:'1px solid var(--card-border)', overflow:'auto', boxShadow:'var(--card-shadow)' }} className="orders-table-wrap">
+        <table style={{ width:'100%', borderCollapse:'collapse', minWidth:'760px' }}>
           <thead>
             <tr style={{ background:'var(--bg2)' }}>
               {['Order','Customer','Items','Total','Status','Action'].map(h=>(
@@ -157,16 +167,7 @@ export default function AdminOrders() {
                     {userCancelled && <p style={{ color:'#ef4444', fontSize:'10px', marginTop:'3px' }}>by user</p>}
                   </td>
                   <td style={{ padding:'14px 16px' }}>
-                    {userCancelled ? (
-                      <span style={{ color:'var(--text3)', fontSize:'12px', fontStyle:'italic' }}>🔒 Locked</span>
-                    ) : (
-                      <select value={o.status} onChange={e=>updateStatus(o._id,e.target.value,o.cancelledBy)}
-                        style={{ background:'var(--input-bg)', border:'1px solid var(--border)', borderRadius:'8px', color:'var(--text)', padding:'6px 10px', fontSize:'12px', cursor:'pointer' }}>
-                        {['pending','confirmed','preparing','out_for_delivery','delivered','cancelled'].map(s=>(
-                          <option key={s} value={s}>{s}</option>
-                        ))}
-                      </select>
-                    )}
+                    {statusSelect(o)}
                   </td>
                 </tr>
               );
@@ -174,6 +175,60 @@ export default function AdminOrders() {
           </tbody>
         </table>
       </div>
+
+      {/* Cards — mobile only */}
+      <div className="orders-cards">
+        {loading ? (
+          <p style={{ textAlign:'center', padding:'40px', color:'var(--text3)' }}>Loading...</p>
+        ) : displayed.length===0 ? (
+          <p style={{ textAlign:'center', padding:'40px', color:'var(--text3)' }}>No orders found</p>
+        ) : displayed.map(o => {
+          const userCancelled = o.status==='cancelled' && o.cancelledBy==='user';
+          const isNew = !prevOrderIds.current.has(o._id);
+          return (
+            <div key={o._id} style={{ background:'var(--card)', border:'1px solid var(--card-border)', borderRadius:'12px', padding:'14px', marginBottom:'12px', boxShadow:'var(--card-shadow)' }}>
+              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'10px' }}>
+                <div style={{ display:'flex', alignItems:'center', gap:'8px' }}>
+                  <p style={{ color:'var(--text)', fontWeight:700, fontSize:'14px' }}>#{o._id.slice(-6).toUpperCase()}</p>
+                  {isNew && <span style={{ background:'#e84040', color:'#fff', fontSize:'9px', fontWeight:700, padding:'2px 6px', borderRadius:'20px' }}>NEW</span>}
+                </div>
+                <span style={{ color:'#e84040', fontWeight:700, fontSize:'14px' }}>${o.totalAmount.toFixed(2)}</span>
+              </div>
+              <p style={{ color:'var(--text3)', fontSize:'11px', marginBottom:'10px' }}>{new Date(o.createdAt).toLocaleDateString()}</p>
+
+              <div style={{ display:'flex', alignItems:'center', gap:'8px', marginBottom:'10px' }}>
+                <div style={{ width:'28px', height:'28px', borderRadius:'50%', background:'#e84040', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'12px', fontWeight:700, color:'#fff', flexShrink:0 }}>
+                  {(o.user?.name||'U')[0]}
+                </div>
+                <div>
+                  <p style={{ color:'var(--text)', fontWeight:500, fontSize:'13px' }}>{o.user?.name||'Unknown'}</p>
+                  <p style={{ color:'var(--text3)', fontSize:'11px' }}>{o.user?.email}</p>
+                </div>
+              </div>
+
+              <p style={{ color:'var(--text2)', fontSize:'12px', marginBottom:'10px' }}>
+                {o.items.map(i=>`${i.name} ×${i.quantity}`).join(', ')}
+              </p>
+
+              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', gap:'10px' }}>
+                <span style={{ padding:'3px 10px', borderRadius:'20px', fontSize:'11px', fontWeight:600, background:(STATUS_COLORS[o.status]||'#64748b')+'20', color:STATUS_COLORS[o.status]||'#64748b', textTransform:'capitalize' }}>
+                  {o.status}{userCancelled ? ' · by user' : ''}
+                </span>
+                <div style={{ flex:1, maxWidth:'160px' }}>{statusSelect(o)}</div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <style>{`
+        .orders-cards { display: none; }
+        @media (max-width: 768px) {
+          .orders-title { font-size: 20px !important; }
+          .orders-table-wrap { display: none; }
+          .orders-cards { display: block; }
+        }
+      `}</style>
     </div>
   );
 }

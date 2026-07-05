@@ -40,7 +40,7 @@ export default function SignUp() {
     <div style={{ background:'var(--bg)', minHeight:'100vh' }}>
       <Navbar/>
       <div style={{ minHeight:'calc(100vh - 68px)', display:'flex', alignItems:'center', justifyContent:'center', padding:'20px' }}>
-        <div style={{ background:'var(--card)', borderRadius:'20px', padding:'40px', width:'100%', maxWidth:'420px', border:'1px solid var(--card-border)', boxShadow:'var(--card-shadow)', transition:'all 0.3s' }}>
+        <div style={{ background:'var(--card)', borderRadius:'20px', padding:'40px', width:'100%', maxWidth:'420px', border:'1px solid var(--card-border)', boxShadow:'var(--card-shadow)', transition:'all 0.3s', boxSizing:'border-box' }} className="auth-card">
           <Link to="/" style={{ display:'block', fontSize:'22px', fontWeight:800, textAlign:'center', marginBottom:'28px' }}>
             <span style={{ color:'#e84040' }}>Galkio</span><span style={{ color:'var(--text)' }}>Food</span>
           </Link>
@@ -69,6 +69,12 @@ export default function SignUp() {
           </p>
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 480px) {
+          .auth-card { padding: 26px 20px !important; border-radius: 16px !important; }
+        }
+      `}</style>
     </div>
   );
 }

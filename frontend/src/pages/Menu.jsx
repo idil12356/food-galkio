@@ -44,12 +44,12 @@ export default function Menu() {
       <Navbar/>
       <div style={{ background:'var(--bg)', minHeight:'100vh', padding:'60px 40px' }} className="page-pad">
         <div style={{ maxWidth:'1300px', margin:'0 auto' }}>
-          <h2 style={{ fontSize:'38px', fontWeight:700, textAlign:'center', marginBottom:'10px', color:'var(--text)' }}>
+          <h2 style={{ fontSize:'38px', fontWeight:700, textAlign:'center', marginBottom:'10px', color:'var(--text)' }} className="menu-page-title">
             {t.ourMenu} <span style={{ color:'#e84040' }}>{t.menuWord}</span>
           </h2>
           <p style={{ color:'var(--text2)', textAlign:'center', marginBottom:'32px', fontSize:'15px' }}>{t.exploreMenu}</p>
 
-          <div style={{ display:'flex', gap:'10px', justifyContent:'center', flexWrap:'wrap', marginBottom:'40px' }}>
+          <div style={{ display:'flex', gap:'10px', justifyContent:'center', flexWrap:'wrap', marginBottom:'40px' }} className="menu-cats">
             {CATS.map(c => (
               <button key={c} onClick={() => setCat(c)}
                 style={{ padding:'9px 20px', borderRadius:'50px', border:`1px solid ${c===cat?'#e84040':'var(--border)'}`, background:c===cat?'#e84040':'var(--card)', color:c===cat?'#fff':'var(--text2)', fontSize:'13px', fontWeight:c===cat?600:400, cursor:'pointer', transition:'all 0.2s', boxShadow:'var(--card-shadow)' }}>
@@ -91,6 +91,21 @@ export default function Menu() {
         </div>
       </div>
       <Footer/>
+
+      <style>{`
+        @media (max-width: 900px) {
+          .grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+        @media (max-width: 768px) {
+          .page-pad { padding: 32px 16px !important; }
+          .menu-page-title { font-size: 26px !important; }
+          .menu-cats { gap: 6px !important; margin-bottom: 24px !important; }
+          .menu-cats button { padding: 7px 14px !important; font-size: 12px !important; }
+        }
+        @media (max-width: 480px) {
+          .grid-4 { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </div>
   );
 }

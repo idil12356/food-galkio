@@ -26,22 +26,22 @@ export default function Home() {
   return (
     <div className="page-enter">
       <Navbar/>
-      <div style={{ position:'relative', height:'88vh', backgroundImage:'url(https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1400)', backgroundSize:'cover', backgroundPosition:'center', display:'flex', alignItems:'center', justifyContent:'center' }}>
+      <div style={{ position:'relative', height:'88vh', backgroundImage:'url(https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1400)', backgroundSize:'cover', backgroundPosition:'center', display:'flex', alignItems:'center', justifyContent:'center' }} className="hero-section">
         <div style={{ position:'absolute', inset:0, background:'linear-gradient(to bottom,rgba(0,0,0,.55),rgba(10,13,20,.95))' }}/>
         <div style={{ position:'relative', textAlign:'center', padding:'0 20px' }}>
-          <div style={{ display:'inline-block', background:'rgba(232,64,64,0.15)', border:'1px solid rgba(232,64,64,0.3)', borderRadius:'50px', padding:'8px 20px', fontSize:'13px', color:'#e84040', marginBottom:'24px', fontWeight:500 }}>
+          <div style={{ display:'inline-block', background:'rgba(232,64,64,0.15)', border:'1px solid rgba(232,64,64,0.3)', borderRadius:'50px', padding:'8px 20px', fontSize:'13px', color:'#e84040', marginBottom:'24px', fontWeight:500 }} className="hero-badge">
             🍽️ Galkio Online Food Ordering
           </div>
           <h1 style={{ fontSize:'62px', fontWeight:800, lineHeight:1.1, marginBottom:'20px', color:'#fff' }} className="hero-title">
             {t.heroTitle}<br/><span style={{ color:'#e84040' }}>{t.heroAccent}</span>
           </h1>
-          <p style={{ fontSize:'16px', color:'#94a3b8', maxWidth:'480px', margin:'0 auto 35px', lineHeight:1.7 }}>{t.heroSub}</p>
+          <p style={{ fontSize:'16px', color:'#94a3b8', maxWidth:'480px', margin:'0 auto 35px', lineHeight:1.7 }} className="hero-sub">{t.heroSub}</p>
           <Link to="/menu" style={{ display:'inline-block', padding:'15px 40px', background:'#e84040', borderRadius:'50px', color:'#fff', fontSize:'15px', fontWeight:600 }}>{t.orderNow}</Link>
         </div>
       </div>
 
       {/* Features */}
-      <div style={{ padding:'80px 40px', background:'var(--bg)' }}>
+      <div style={{ padding:'80px 40px', background:'var(--bg)' }} className="section-pad">
         <div style={{ maxWidth:'1100px', margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'24px' }} className="grid-3">
           {[
             { icon:'🕐', t:t.fastDelivery, d:t.fastDeliveryDesc, color:'#e84040' },
@@ -58,9 +58,9 @@ export default function Home() {
       </div>
 
       {/* Popular Dishes */}
-      <div style={{ padding:'60px 40px', background:'var(--bg2)' }}>
+      <div style={{ padding:'60px 40px', background:'var(--bg2)' }} className="section-pad">
         <div style={{ maxWidth:'1300px', margin:'0 auto' }}>
-          <h2 style={{ fontSize:'32px', fontWeight:700, textAlign:'center', marginBottom:'10px', color:'var(--text)' }}>
+          <h2 style={{ fontSize:'32px', fontWeight:700, textAlign:'center', marginBottom:'10px', color:'var(--text)' }} className="section-title">
             {t.popularDishes} <span style={{ color:'#e84040' }}>🔥</span>
           </h2>
           <p style={{ color:'var(--text2)', textAlign:'center', fontSize:'15px', marginBottom:'40px' }}>{t.popularSub}</p>
@@ -90,13 +90,33 @@ export default function Home() {
       </div>
 
       {/* CTA */}
-      <div style={{ padding:'80px 40px', textAlign:'center', background:'var(--bg)' }}>
-        <h2 style={{ fontSize:'34px', fontWeight:700, marginBottom:'12px', color:'var(--text)' }}>{t.readyToOrder}</h2>
+      <div style={{ padding:'80px 40px', textAlign:'center', background:'var(--bg)' }} className="section-pad">
+        <h2 style={{ fontSize:'34px', fontWeight:700, marginBottom:'12px', color:'var(--text)' }} className="section-title">{t.readyToOrder}</h2>
         <p style={{ color:'var(--text2)', marginBottom:'28px', fontSize:'15px' }}>{t.exploreDishes}</p>
         <Link to="/menu" style={{ display:'inline-block', padding:'14px 36px', background:'#e84040', borderRadius:'50px', color:'#fff', fontSize:'15px', fontWeight:600 }}>{t.viewFullMenu}</Link>
       </div>
 
       <Footer/>
+
+      <style>{`
+        @media (max-width: 900px) {
+          .grid-3 { grid-template-columns: repeat(2, 1fr) !important; }
+          .grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+        @media (max-width: 768px) {
+          .hero-section { height: 78vh !important; }
+          .hero-title { font-size: 36px !important; }
+          .hero-sub { font-size: 14px !important; }
+          .hero-badge { font-size: 11px !important; padding: 6px 14px !important; }
+          .section-pad { padding: 48px 20px !important; }
+          .section-title { font-size: 24px !important; }
+        }
+        @media (max-width: 480px) {
+          .grid-3 { grid-template-columns: 1fr !important; }
+          .grid-4 { grid-template-columns: 1fr !important; }
+          .hero-title { font-size: 28px !important; }
+        }
+      `}</style>
     </div>
   );
 }

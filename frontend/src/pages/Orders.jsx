@@ -67,7 +67,7 @@ export default function Orders() {
 
   if (isAdmin) return (
     <div style={{ background:"var(--bg)", minHeight:"100vh" }}><Navbar/>
-      <div style={{ minHeight:"70vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center" }}>
+      <div style={{ minHeight:"70vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:'0 20px', textAlign:'center' }}>
         <div style={{ fontSize:"60px", marginBottom:"20px" }}>🚫</div>
         <h2 style={{ color:"var(--text)", marginBottom:"10px" }}>Admin cannot view user orders</h2>
         <p style={{ color:"var(--text2)", marginBottom:"30px" }}>Manage orders from the Admin Dashboard</p>
@@ -79,7 +79,7 @@ export default function Orders() {
 
   if (orders.length===0) return (
     <div style={{ background:'var(--bg)', minHeight:'100vh' }}><Navbar/>
-      <div style={{ minHeight:'70vh', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center' }}>
+      <div style={{ minHeight:'70vh', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'0 20px', textAlign:'center' }}>
         <div style={{ fontSize:'70px', marginBottom:'20px' }}>📦</div>
         <h2 style={{ color:'var(--text)', marginBottom:'10px' }}>{t.noOrders}</h2>
         <p style={{ color:'var(--text2)', marginBottom:'30px' }}>{t.startOrdering}</p>
@@ -97,7 +97,7 @@ export default function Orders() {
       <Navbar/>
       <div style={{ padding:'50px 40px' }} className="page-pad">
         <div style={{ maxWidth:'1200px', margin:'0 auto' }}>
-          <h2 style={{ fontSize:'30px', fontWeight:700, marginBottom:'22px', color:'var(--text)' }}>{t.myOrdersTitle}</h2>
+          <h2 style={{ fontSize:'30px', fontWeight:700, marginBottom:'22px', color:'var(--text)' }} className="orders-page-title">{t.myOrdersTitle}</h2>
 
           {/* Filter tabs */}
           <div style={{ display:'flex', gap:'8px', marginBottom:'24px', flexWrap:'wrap' }}>
@@ -116,9 +116,9 @@ export default function Orders() {
             ))}
           </div>
 
-          <div style={{ display:'grid', gridTemplateColumns:'320px 1fr', gap:'22px', alignItems:'start' }} className="layout-2col">
+          <div style={{ display:'grid', gridTemplateColumns:'320px 1fr', gap:'22px', alignItems:'start' }} className="orders-layout">
             {/* List */}
-            <div style={{ display:'flex', flexDirection:'column', gap:'10px', maxHeight:'calc(100vh - 220px)', overflowY:'auto' }}>
+            <div style={{ display:'flex', flexDirection:'column', gap:'10px', maxHeight:'calc(100vh - 220px)', overflowY:'auto' }} className="orders-list">
               {filtered.map(order=>{
                 const si = STATUS[order.status];
                 return (
@@ -144,9 +144,9 @@ export default function Orders() {
             {/* Detail */}
             {selected && info && (
               <div style={{ display:'flex', flexDirection:'column', gap:'16px' }}>
-                <div style={{ background:info.color+'12', borderRadius:'16px', padding:'22px', border:`1px solid ${info.color}30`, display:'flex', alignItems:'center', gap:'18px' }}>
+                <div style={{ background:info.color+'12', borderRadius:'16px', padding:'22px', border:`1px solid ${info.color}30`, display:'flex', alignItems:'center', gap:'18px', flexWrap:'wrap' }}>
                   <span style={{ fontSize:'40px' }}>{info.icon}</span>
-                  <div style={{ flex:1 }}>
+                  <div style={{ flex:1, minWidth:'140px' }}>
                     <h3 style={{ color:info.color, fontSize:'18px', fontWeight:700 }}>{t[info.key]}</h3>
                     <p style={{ color:'var(--text3)', fontSize:'13px' }}>Order #{selected._id.slice(-6).toUpperCase()}</p>
                   </div>
@@ -186,12 +186,12 @@ export default function Orders() {
                   <h4 style={{ color:'var(--text)', fontSize:'14px', fontWeight:600, marginBottom:'14px' }}>{t.itemsOrdered}</h4>
                   {selected.items.map((item,i)=>(
                     <div key={i} style={{ display:'flex', alignItems:'center', gap:'12px', marginBottom:'12px' }}>
-                      {item.image && <img src={item.image} alt={item.name} style={{ width:'46px', height:'46px', borderRadius:'8px', objectFit:'cover' }}/>}
-                      <div style={{ flex:1 }}>
+                      {item.image && <img src={item.image} alt={item.name} style={{ width:'46px', height:'46px', borderRadius:'8px', objectFit:'cover', flexShrink:0 }}/>}
+                      <div style={{ flex:1, minWidth:0 }}>
                         <p style={{ color:'var(--text)', fontWeight:600, fontSize:'14px' }}>{item.name}</p>
                         <p style={{ color:'var(--text3)', fontSize:'12px' }}>×{item.quantity}</p>
                       </div>
-                      <p style={{ color:'#e84040', fontWeight:700 }}>${(item.price*item.quantity).toFixed(2)}</p>
+                      <p style={{ color:'#e84040', fontWeight:700, flexShrink:0 }}>${(item.price*item.quantity).toFixed(2)}</p>
                     </div>
                   ))}
                   <div style={{ height:'1px', background:'var(--border)', margin:'12px 0' }}/>
@@ -219,6 +219,17 @@ export default function Orders() {
         </div>
       </div>
       <Footer/>
+
+      <style>{`
+        @media (max-width: 900px) {
+          .orders-layout { grid-template-columns: 1fr !important; }
+          .orders-list { max-height: none !important; overflow-y: visible !important; }
+        }
+        @media (max-width: 768px) {
+          .page-pad { padding: 28px 16px !important; }
+          .orders-page-title { font-size: 22px !important; }
+        }
+      `}</style>
     </div>
   );
 }

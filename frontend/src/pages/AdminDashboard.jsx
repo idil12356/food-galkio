@@ -67,12 +67,12 @@ export default function AdminDashboard() {
       {/* Header */}
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', flexWrap:'wrap', gap:'16px' }}>
         <div>
-          <h2 style={{ fontSize:'26px', fontWeight:700, color:'var(--text)', marginBottom:'4px' }}>
+          <h2 style={{ fontSize:'26px', fontWeight:700, color:'var(--text)', marginBottom:'4px' }} className="dash-title">
             Dashboard <span style={{ color:'#e84040' }}>Overview</span>
           </h2>
           <p style={{ color:'var(--text2)', fontSize:'13px' }}>Welcome back! Here's what's happening today.</p>
         </div>
-        <div style={{ display:'flex', gap:'6px', flexWrap:'wrap' }}>
+        <div style={{ display:'flex', gap:'6px', flexWrap:'wrap' }} className="dash-periods">
           {PERIODS.map(p => (
             <button key={p.key} onClick={() => setPeriod(p.key)}
               style={{ padding:'7px 14px', background:period===p.key?'#e84040':'var(--card)', border:`1px solid ${period===p.key?'#e84040':'var(--card-border)'}`, borderRadius:'8px', color:period===p.key?'#fff':'var(--text2)', fontSize:'12px', fontWeight:period===p.key?600:400, cursor:'pointer', boxShadow:'var(--card-shadow)' }}>
@@ -83,7 +83,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Stat Cards */}
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:'16px' }}>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:'16px' }} className="dash-stat-grid">
         {cards.map((c,i) => (
           <div key={i} style={{ background:'var(--card)', borderRadius:'14px', padding:'20px', border:'1px solid var(--card-border)', boxShadow:'var(--card-shadow)', borderTop:`3px solid ${c.color}`, transition:'all 0.3s' }}>
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start' }}>
@@ -92,14 +92,14 @@ export default function AdminDashboard() {
                 <p style={{ fontSize:'24px', fontWeight:800, color:c.color, marginBottom:'4px' }}>{c.value}</p>
                 <p style={{ color:'var(--text3)', fontSize:'11px' }}>{c.sub}</p>
               </div>
-              <div style={{ width:'40px', height:'40px', borderRadius:'10px', background:c.color+'18', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'20px' }}>{c.icon}</div>
+              <div style={{ width:'40px', height:'40px', borderRadius:'10px', background:c.color+'18', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'20px', flexShrink:0 }}>{c.icon}</div>
             </div>
           </div>
         ))}
       </div>
 
       {/* Charts */}
-      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'20px' }}>
+      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'20px' }} className="dash-chart-grid">
         <div style={{ background:'var(--card)', borderRadius:'14px', padding:'22px', border:'1px solid var(--card-border)', boxShadow:'var(--card-shadow)' }}>
           <h3 style={{ color:'var(--text)', fontSize:'15px', fontWeight:600, marginBottom:'18px' }}>{revenueChartTitle}</h3>
           {stats.dailyRevenue?.length > 0 ? (
@@ -143,10 +143,10 @@ export default function AdminDashboard() {
           <h3 style={{ color:'var(--text)', fontSize:'15px', fontWeight:600, marginBottom:'18px' }}>{t.popularItems}</h3>
           <div style={{ display:'flex', flexDirection:'column', gap:'12px' }}>
             {stats.categoryStats.map((item,i) => (
-              <div key={i} style={{ display:'flex', alignItems:'center', gap:'16px', padding:'10px', background:'var(--bg2)', borderRadius:'10px' }}>
+              <div key={i} style={{ display:'flex', alignItems:'center', gap:'16px', padding:'10px', background:'var(--bg2)', borderRadius:'10px', flexWrap:'wrap' }} className="dash-pop-row">
                 <div style={{ width:'28px', height:'28px', borderRadius:'8px', background:COLORS[i]+'20', color:COLORS[i], display:'flex', alignItems:'center', justifyContent:'center', fontSize:'11px', fontWeight:700, flexShrink:0 }}>#{i+1}</div>
-                <span style={{ color:'var(--text)', fontSize:'14px', fontWeight:500, flex:1 }}>{item._id}</span>
-                <div style={{ width:'120px', height:'6px', background:isDark?'#1e2d3d':'#e2e8f0', borderRadius:'3px', overflow:'hidden' }}>
+                <span style={{ color:'var(--text)', fontSize:'14px', fontWeight:500, flex:1, minWidth:'80px' }}>{item._id}</span>
+                <div style={{ width:'120px', height:'6px', background:isDark?'#1e2d3d':'#e2e8f0', borderRadius:'3px', overflow:'hidden' }} className="dash-pop-bar">
                   <div style={{ height:'100%', borderRadius:'3px', background:COLORS[i], width:`${(item.count/stats.categoryStats[0].count)*100}%` }}/>
                 </div>
                 <span style={{ color:COLORS[i], fontWeight:700, fontSize:'14px', minWidth:'30px' }}>{item.count}</span>
@@ -155,6 +155,20 @@ export default function AdminDashboard() {
           </div>
         </div>
       )}
+
+      <style>{`
+        @media (max-width: 768px) {
+          .dash-stat-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .dash-chart-grid { grid-template-columns: 1fr !important; }
+          .dash-title { font-size: 20px !important; }
+          .dash-periods { width: 100%; }
+          .dash-periods button { flex: 1 1 auto; }
+        }
+        @media (max-width: 420px) {
+          .dash-stat-grid { grid-template-columns: 1fr !important; }
+          .dash-pop-bar { display: none; }
+        }
+      `}</style>
     </div>
   );
 }

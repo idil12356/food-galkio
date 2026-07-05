@@ -37,17 +37,18 @@ export default function AdminUsers() {
     <div>
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'22px', flexWrap:'wrap', gap:'14px' }}>
         <div>
-          <h2 style={{ fontSize:'24px', fontWeight:700, color:'var(--text)', marginBottom:'4px' }}>
+          <h2 style={{ fontSize:'24px', fontWeight:700, color:'var(--text)', marginBottom:'4px' }} className="users-title">
             User <span style={{ color:'#e84040' }}>Management</span>
           </h2>
           <p style={{ color:'var(--text2)', fontSize:'13px' }}>Manage registered users and administrators.</p>
         </div>
         <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t.searchUsers}
-          style={{ background:'var(--input-bg)', border:'1px solid var(--card-border)', borderRadius:'10px', color:'var(--text)', padding:'10px 16px', fontSize:'13px', width:'220px', boxShadow:'var(--card-shadow)' }}/>
+          style={{ background:'var(--input-bg)', border:'1px solid var(--card-border)', borderRadius:'10px', color:'var(--text)', padding:'10px 16px', fontSize:'13px', width:'220px', boxShadow:'var(--card-shadow)' }} className="users-search"/>
       </div>
 
-      <div style={{ background:'var(--card)', borderRadius:'14px', border:'1px solid var(--card-border)', overflow:'hidden', boxShadow:'var(--card-shadow)' }}>
-        <table style={{ width:'100%', borderCollapse:'collapse' }}>
+      {/* Table — desktop/tablet */}
+      <div style={{ background:'var(--card)', borderRadius:'14px', border:'1px solid var(--card-border)', overflow:'auto', boxShadow:'var(--card-shadow)' }} className="users-table-wrap">
+        <table style={{ width:'100%', borderCollapse:'collapse', minWidth:'640px' }}>
           <thead>
             <tr style={{ background:'var(--bg2)' }}>
               {['User','Email','Role','Status','Joined','Actions'].map(h => (
@@ -94,6 +95,52 @@ export default function AdminUsers() {
           </tbody>
         </table>
       </div>
+
+      {/* Cards — mobile only */}
+      <div className="users-cards">
+        {loading ? (
+          <p style={{ textAlign:'center', padding:'40px', color:'var(--text3)' }}>Loading...</p>
+        ) : filtered.length===0 ? (
+          <p style={{ textAlign:'center', padding:'40px', color:'var(--text3)' }}>No users found</p>
+        ) : filtered.map(u => (
+          <div key={u._id} style={{ background:'var(--card)', border:'1px solid var(--card-border)', borderRadius:'12px', padding:'14px', marginBottom:'12px', boxShadow:'var(--card-shadow)' }}>
+            <div style={{ display:'flex', alignItems:'center', gap:'10px', marginBottom:'10px' }}>
+              <div style={{ width:'36px', height:'36px', borderRadius:'50%', background:u.role==='admin'?'#e84040':'#3b82f6', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'15px', fontWeight:700, color:'#fff', flexShrink:0 }}>
+                {u.name[0].toUpperCase()}
+              </div>
+              <div style={{ flex:1, minWidth:0 }}>
+                <p style={{ color:'var(--text)', fontWeight:600, fontSize:'14px' }}>{u.name}</p>
+                <p style={{ color:'var(--text3)', fontSize:'11px', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{u.email}</p>
+              </div>
+              <span style={{ padding:'4px 10px', borderRadius:'20px', fontSize:'10px', fontWeight:700, background:u.role==='admin'?'rgba(139,92,246,0.15)':'rgba(59,130,246,0.15)', color:u.role==='admin'?'#8b5cf6':'#3b82f6', flexShrink:0 }}>
+                {u.role.toUpperCase()}
+              </span>
+            </div>
+            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+              <div style={{ display:'flex', gap:'10px', alignItems:'center' }}>
+                <span style={{ color:'#10b981', fontSize:'12px', fontWeight:600 }}>● Active</span>
+                <span style={{ color:'var(--text3)', fontSize:'12px' }}>{new Date(u.createdAt).toLocaleDateString()}</span>
+              </div>
+              {u.role !== 'admin' && (
+                <button onClick={()=>deleteUser(u._id)}
+                  style={{ padding:'6px 14px', background:'rgba(239,68,68,0.08)', border:'1px solid rgba(239,68,68,0.2)', borderRadius:'8px', color:'#ef4444', fontSize:'12px', cursor:'pointer' }}>
+                  {t.delete}
+                </button>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <style>{`
+        .users-cards { display: none; }
+        @media (max-width: 768px) {
+          .users-title { font-size: 20px !important; }
+          .users-search { width: 100% !important; }
+          .users-table-wrap { display: none; }
+          .users-cards { display: block; }
+        }
+      `}</style>
     </div>
   );
 }

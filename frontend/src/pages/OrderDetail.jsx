@@ -59,7 +59,7 @@ export default function OrderDetail() {
             {t.allOrders}
           </button>
 
-          <div style={{ background:info.color+'12', borderRadius:'18px', padding:'26px 30px', border:`1px solid ${info.color}30`, display:'flex', alignItems:'center', gap:'22px' }}>
+          <div style={{ background:info.color+'12', borderRadius:'18px', padding:'26px 30px', border:`1px solid ${info.color}30`, display:'flex', alignItems:'center', gap:'22px', flexWrap:'wrap' }} className="status-banner">
             <span style={{ fontSize:'50px' }}>{info.icon}</span>
             <div>
               <h2 style={{ color:info.color, fontSize:'22px', fontWeight:700 }}>{t[info.key]}</h2>
@@ -68,7 +68,7 @@ export default function OrderDetail() {
             </div>
           </div>
 
-          <div style={{ display:'grid', gridTemplateColumns:'360px 1fr', gap:'22px', alignItems:'start' }} className="layout-2col">
+          <div style={{ display:'grid', gridTemplateColumns:'360px 1fr', gap:'22px', alignItems:'start' }} className="detail-layout">
             {order.status !== 'cancelled' && (
               <div style={{ background:'var(--card)', borderRadius:'16px', padding:'22px', border:'1px solid var(--card-border)', boxShadow:'var(--card-shadow)' }}>
                 <h3 style={{ color:'var(--text)', fontSize:'15px', fontWeight:700, marginBottom:'18px' }}>{t.orderProgress}</h3>
@@ -99,12 +99,12 @@ export default function OrderDetail() {
                 <h3 style={{ color:'var(--text)', fontSize:'15px', fontWeight:700, marginBottom:'18px' }}>{t.itemsOrdered}</h3>
                 {order.items.map((item,i)=>(
                   <div key={i} style={{ display:'flex', alignItems:'center', gap:'12px', marginBottom:'12px' }}>
-                    {item.image && <img src={item.image} alt={item.name} style={{ width:'48px', height:'48px', borderRadius:'8px', objectFit:'cover' }}/>}
-                    <div style={{ flex:1 }}>
+                    {item.image && <img src={item.image} alt={item.name} style={{ width:'48px', height:'48px', borderRadius:'8px', objectFit:'cover', flexShrink:0 }}/>}
+                    <div style={{ flex:1, minWidth:0 }}>
                       <p style={{ color:'var(--text)', fontWeight:600, fontSize:'14px' }}>{item.name}</p>
                       <p style={{ color:'var(--text3)', fontSize:'12px' }}>Qty: {item.quantity} × ${item.price.toFixed(2)}</p>
                     </div>
-                    <p style={{ color:'#e84040', fontWeight:700 }}>${(item.price*item.quantity).toFixed(2)}</p>
+                    <p style={{ color:'#e84040', fontWeight:700, flexShrink:0 }}>${(item.price*item.quantity).toFixed(2)}</p>
                   </div>
                 ))}
                 <div style={{ height:'1px', background:'var(--border)', margin:'14px 0' }}/>
@@ -117,7 +117,7 @@ export default function OrderDetail() {
 
               <div style={{ background:'var(--card)', borderRadius:'16px', padding:'22px', border:'1px solid var(--card-border)', boxShadow:'var(--card-shadow)' }}>
                 <h3 style={{ color:'var(--text)', fontSize:'15px', fontWeight:700, marginBottom:'16px' }}>{t.paymentInfo}</h3>
-                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'10px', marginBottom:'14px' }}>
+                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'10px', marginBottom:'14px' }} className="payment-info-grid">
                   <div style={{ background:'var(--bg2)', borderRadius:'10px', padding:'12px' }}>
                     <p style={{ color:'var(--text3)', fontSize:'11px', marginBottom:'4px' }}>Payment</p>
                     <p style={{ color:'var(--text)', fontWeight:600, fontSize:'13px', textTransform:'capitalize' }}>{order.payment?.method?.replace('_',' ')}</p>
@@ -143,6 +143,20 @@ export default function OrderDetail() {
           </div>
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 900px) {
+          .detail-layout { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 768px) {
+          .page-pad { padding: 20px 16px 40px !important; }
+          .status-banner { padding: 20px !important; gap: 16px !important; }
+          .status-banner span { font-size: 38px !important; }
+        }
+        @media (max-width: 420px) {
+          .payment-info-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </div>
   );
 }

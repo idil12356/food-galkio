@@ -79,7 +79,7 @@ export default function Cart() {
   if (cart.length===0 && step==='cart') return (
     <div style={{ background:'var(--bg)', minHeight:'100vh' }}>
       <Navbar/>
-      <div style={{ minHeight:'70vh', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center' }}>
+      <div style={{ minHeight:'70vh', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'0 20px', textAlign:'center' }}>
         <div style={{ fontSize:'70px', marginBottom:'20px' }}>🛒</div>
         <h2 style={{ color:'var(--text)', marginBottom:'10px' }}>{t.cartEmpty}</h2>
         <p style={{ color:'var(--text2)', marginBottom:'30px' }}>{t.addItems}</p>
@@ -98,28 +98,28 @@ export default function Cart() {
           {/* CART STEP */}
           {step==='cart' && (
             <>
-              <h2 style={{ fontSize:'32px', fontWeight:700, marginBottom:'30px', color:'var(--text)' }}>{t.yourCart}</h2>
-              <div style={{ display:'grid', gridTemplateColumns:'1fr 360px', gap:'28px', alignItems:'start' }} className="layout-2col">
+              <h2 style={{ fontSize:'32px', fontWeight:700, marginBottom:'30px', color:'var(--text)' }} className="cart-title">{t.yourCart}</h2>
+              <div style={{ display:'grid', gridTemplateColumns:'1fr 360px', gap:'28px', alignItems:'start' }} className="cart-layout">
                 <div style={{ display:'flex', flexDirection:'column', gap:'12px' }}>
                   {cart.map(item=>(
-                    <div key={item._id} style={{ background:'var(--card)', borderRadius:'14px', padding:'16px', display:'flex', alignItems:'center', gap:'14px', border:'1px solid var(--card-border)', boxShadow:'var(--card-shadow)', transition:'all 0.3s' }}>
-                      <img src={item.image} alt={item.name} style={{ width:'65px', height:'65px', borderRadius:'10px', objectFit:'cover' }}/>
-                      <div style={{ flex:1 }}>
+                    <div key={item._id} style={{ background:'var(--card)', borderRadius:'14px', padding:'16px', display:'flex', alignItems:'center', gap:'14px', border:'1px solid var(--card-border)', boxShadow:'var(--card-shadow)', transition:'all 0.3s', flexWrap:'wrap' }} className="cart-item-row">
+                      <img src={item.image} alt={item.name} style={{ width:'65px', height:'65px', borderRadius:'10px', objectFit:'cover', flexShrink:0 }} className="cart-item-img"/>
+                      <div style={{ flex:1, minWidth:'120px' }} className="cart-item-info">
                         <h4 style={{ color:'var(--text)', fontSize:'15px', fontWeight:600, marginBottom:'4px' }}>{item.name}</h4>
                         <p style={{ color:'#e84040', fontSize:'14px', fontWeight:600 }}>${item.price.toFixed(2)}</p>
                       </div>
-                      <div style={{ display:'flex', alignItems:'center', gap:'10px' }}>
+                      <button onClick={()=>removeFromCart(item._id)} style={{ background:'transparent', border:'none', fontSize:'16px', cursor:'pointer', opacity:0.6, color:'var(--text)', flexShrink:0 }} className="cart-item-delete">🗑</button>
+                      <div style={{ display:'flex', alignItems:'center', gap:'10px' }} className="cart-item-qty">
                         <button onClick={()=>updateQuantity(item._id,item.quantity-1)} style={{ width:'30px', height:'30px', borderRadius:'8px', background:'var(--bg2)', border:'1px solid var(--border)', color:'var(--text)', fontSize:'16px', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>−</button>
                         <span style={{ color:'var(--text)', fontWeight:700, minWidth:'20px', textAlign:'center' }}>{item.quantity}</span>
                         <button onClick={()=>updateQuantity(item._id,item.quantity+1)} style={{ width:'30px', height:'30px', borderRadius:'8px', background:'var(--bg2)', border:'1px solid var(--border)', color:'var(--text)', fontSize:'16px', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>+</button>
                       </div>
-                      <span style={{ color:'#e84040', fontWeight:700, fontSize:'15px', minWidth:'55px', textAlign:'right' }}>${(item.price*item.quantity).toFixed(2)}</span>
-                      <button onClick={()=>removeFromCart(item._id)} style={{ background:'transparent', border:'none', fontSize:'16px', cursor:'pointer', opacity:0.6, color:'var(--text)' }}>🗑</button>
+                      <span style={{ color:'#e84040', fontWeight:700, fontSize:'15px', minWidth:'55px', textAlign:'right' }} className="cart-item-subtotal">${(item.price*item.quantity).toFixed(2)}</span>
                     </div>
                   ))}
                 </div>
 
-                <div style={{ background:'var(--card)', borderRadius:'16px', padding:'24px', border:'1px solid var(--card-border)', boxShadow:'var(--card-shadow)', position:'sticky', top:'90px', transition:'all 0.3s' }}>
+                <div style={{ background:'var(--card)', borderRadius:'16px', padding:'24px', border:'1px solid var(--card-border)', boxShadow:'var(--card-shadow)', position:'sticky', top:'90px', transition:'all 0.3s' }} className="cart-summary">
                   <h3 style={{ color:'var(--text)', fontSize:'17px', fontWeight:700, marginBottom:'20px' }}>{t.orderSummary}</h3>
                   <div style={{ display:'flex', justifyContent:'space-between', color:'var(--text2)', fontSize:'14px', marginBottom:'12px' }}><span>{t.subtotal}</span><span>${subtotal.toFixed(2)}</span></div>
                   <div style={{ display:'flex', justifyContent:'space-between', color:'var(--text2)', fontSize:'14px', marginBottom:'12px' }}><span>{t.deliveryFee}</span><span>${deliveryFee.toFixed(2)}</span></div>
@@ -138,14 +138,14 @@ export default function Cart() {
           {/* CHECKOUT STEP */}
           {step==='checkout' && (
             <>
-              <div style={{ display:'flex', alignItems:'center', gap:'20px', marginBottom:'20px' }}>
+              <div style={{ display:'flex', alignItems:'center', gap:'20px', marginBottom:'20px', flexWrap:'wrap' }}>
                 <button onClick={()=>setStep('cart')} style={{ background:'transparent', border:'1px solid var(--border)', borderRadius:'8px', color:'var(--text2)', padding:'8px 16px', fontSize:'13px', cursor:'pointer' }}>{t.backToCart}</button>
-                <h2 style={{ fontSize:'28px', fontWeight:700, color:'var(--text)' }}>{t.checkout}</h2>
+                <h2 style={{ fontSize:'28px', fontWeight:700, color:'var(--text)' }} className="checkout-title">{t.checkout}</h2>
               </div>
 
               <div style={{ display:'grid', gridTemplateColumns:'280px 1fr', gap:'24px', alignItems:'start' }} className="checkout-layout">
                 {/* Left */}
-                <div style={{ display:'flex', flexDirection:'column', gap:'16px', position:'sticky', top:'90px' }}>
+                <div style={{ display:'flex', flexDirection:'column', gap:'16px', position:'sticky', top:'90px' }} className="checkout-sidebar">
                   <div style={{ background:'var(--card)', borderRadius:'14px', padding:'18px', border:'1px solid var(--card-border)', boxShadow:'var(--card-shadow)' }}>
                     <div style={{ color:'var(--text2)', fontSize:'13px', marginBottom:'8px' }}>✅ {t.freeCancellation}</div>
                     <div style={{ color:'var(--text2)', fontSize:'13px', marginBottom:'8px' }}>✅ {t.securePayment}</div>
@@ -171,13 +171,13 @@ export default function Cart() {
                 {/* Right */}
                 <div style={{ display:'flex', flexDirection:'column', gap:'18px' }}>
                   {/* Address */}
-                  <div style={{ background:'var(--card)', borderRadius:'14px', padding:'22px', border:'1px solid var(--card-border)', boxShadow:'var(--card-shadow)' }}>
+                  <div style={{ background:'var(--card)', borderRadius:'14px', padding:'22px', border:'1px solid var(--card-border)', boxShadow:'var(--card-shadow)' }} className="checkout-card">
                     <h3 style={{ color:'var(--text)', fontSize:'12px', fontWeight:700, letterSpacing:'1px', marginBottom:'18px' }}>{t.shippingDetails}</h3>
                     <div style={{ marginBottom:'14px' }}>
                       <label style={{ display:'block', color:'var(--text2)', fontSize:'12px', marginBottom:'6px' }}>{t.streetAddress}</label>
                       <input value={address.street} onChange={e=>setAddress({...address,street:e.target.value})} placeholder={t.streetAddress} style={inp}/>
                     </div>
-                    <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'12px' }}>
+                    <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'12px' }} className="checkout-grid-2">
                       <div>
                         <label style={{ display:'block', color:'var(--text2)', fontSize:'12px', marginBottom:'6px' }}>{t.city}</label>
                         <input value={address.city} onChange={e=>setAddress({...address,city:e.target.value})} placeholder={t.city} style={inp}/>
@@ -190,9 +190,9 @@ export default function Cart() {
                   </div>
 
                   {/* Payment */}
-                  <div style={{ background:'var(--card)', borderRadius:'14px', padding:'22px', border:'1px solid var(--card-border)', boxShadow:'var(--card-shadow)' }}>
+                  <div style={{ background:'var(--card)', borderRadius:'14px', padding:'22px', border:'1px solid var(--card-border)', boxShadow:'var(--card-shadow)' }} className="checkout-card">
                     <h3 style={{ color:'var(--text)', fontSize:'12px', fontWeight:700, letterSpacing:'1px', marginBottom:'18px' }}>{t.paymentMethod}</h3>
-                    <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'10px', marginBottom:'16px' }}>
+                    <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'10px', marginBottom:'16px' }} className="pay-method-grid">
                       {[{id:'mobile_money',icon:'📱',label:t.mobileMoneyLabel},{id:'card',icon:'💳',label:t.cardLabel},{id:'cash',icon:'💵',label:t.cashLabel}].map(m=>(
                         <button key={m.id} onClick={()=>setPayMethod(m.id)}
                           style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'14px 8px', background:payMethod===m.id?'rgba(232,64,64,0.12)':'var(--input-bg)', border:`1px solid ${payMethod===m.id?'#e84040':'var(--border)'}`, borderRadius:'12px', color:payMethod===m.id?'var(--text)':'var(--text2)', cursor:'pointer', gap:'4px' }}>
@@ -216,7 +216,7 @@ export default function Cart() {
                       <div style={{ background:'var(--input-bg)', borderRadius:'12px', padding:'16px', border:'1px solid var(--border)' }}>
                         <p style={{ color:'#e84040', fontSize:'13px', fontWeight:600, marginBottom:'12px' }}>{t.creditCardDetails}</p>
                         <input value={cardNum} onChange={e=>setCardNum(e.target.value)} placeholder={t.cardNumber} maxLength={19} style={{ ...inp, marginBottom:'12px' }}/>
-                        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'12px' }}>
+                        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'12px' }} className="checkout-grid-2">
                           <input value={cardExp} onChange={e=>setCardExp(e.target.value)} placeholder="MM/YY" style={inp}/>
                           <input value={cardCvc} onChange={e=>setCardCvc(e.target.value)} placeholder="CVC" maxLength={3} style={inp}/>
                         </div>
@@ -240,6 +240,32 @@ export default function Cart() {
         </div>
       </div>
       <Footer/>
+
+      <style>{`
+        @media (max-width: 900px) {
+          .cart-layout { grid-template-columns: 1fr !important; }
+          .cart-summary { position: static !important; }
+          .checkout-layout { grid-template-columns: 1fr !important; }
+          .checkout-sidebar { position: static !important; order: 2; }
+        }
+        @media (max-width: 768px) {
+          .page-pad { padding: 28px 16px !important; }
+          .cart-title { font-size: 24px !important; }
+          .checkout-title { font-size: 22px !important; }
+        }
+        @media (max-width: 560px) {
+          .cart-item-row { position: relative; padding: 14px !important; }
+          .cart-item-img { order: 1; }
+          .cart-item-info { order: 2; }
+          .cart-item-delete { order: 3; }
+          .cart-item-qty { order: 4; flex-basis: 100%; margin-top: 8px; justify-content: flex-start; }
+          .cart-item-subtotal { order: 5; margin-left: auto; margin-top: 8px; }
+          .checkout-grid-2 { grid-template-columns: 1fr !important; }
+          .pay-method-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 6px !important; }
+          .pay-method-grid button { padding: 10px 4px !important; }
+          .pay-method-grid button span:last-child { font-size: 10px !important; }
+        }
+      `}</style>
     </div>
   );
 }

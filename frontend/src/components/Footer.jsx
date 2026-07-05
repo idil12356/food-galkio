@@ -6,9 +6,9 @@ export default function Footer() {
   const { t } = useLang();
   if (location.pathname.startsWith('/admin')) return null;
   return (
-    <footer style={{ background:'var(--footer-bg)', padding:'60px 0 20px', marginTop:'80px', borderTop:'1px solid rgba(255,255,255,0.06)' }}>
-      <div style={{ maxWidth:'1200px', margin:'0 auto', padding:'0 40px' }}>
-        <div style={{ display:'grid', gridTemplateColumns:'2fr 1fr 1fr 1.5fr', gap:'40px' }}>
+    <footer style={{ background:'var(--footer-bg)', padding:'60px 0 20px', marginTop:'80px', borderTop:'1px solid rgba(255,255,255,0.06)' }} className="site-footer">
+      <div style={{ maxWidth:'1200px', margin:'0 auto', padding:'0 40px' }} className="footer-inner">
+        <div style={{ display:'grid', gridTemplateColumns:'2fr 1fr 1fr 1.5fr', gap:'40px' }} className="footer-grid">
           <div>
             <div style={{ fontSize:'20px', fontWeight:800, marginBottom:'16px' }}>
               <span style={{ color:'#e84040' }}>Galkio</span><span style={{ color:'#fff' }}>Food</span>
@@ -36,6 +36,18 @@ export default function Footer() {
         <div style={{ height:'1px', background:'rgba(255,255,255,0.06)', margin:'40px 0 20px' }}/>
         <p style={{ color:'#475569', fontSize:'12px', textAlign:'center' }}>© 2026 Galkio Online Food Ordering. All rights reserved.</p>
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .site-footer { padding: 40px 0 16px !important; margin-top: 48px !important; }
+          .footer-inner { padding: 0 20px !important; }
+          .footer-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 28px !important; text-align: left; }
+        }
+        @media (max-width: 480px) {
+          .footer-grid { grid-template-columns: 1fr !important; text-align: center; }
+          .footer-grid > div:first-child > div:last-child { justify-content: center; }
+        }
+      `}</style>
     </footer>
   );
 }

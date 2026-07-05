@@ -59,7 +59,7 @@ export default function ForgotPassword() {
     <div style={{ background:'var(--bg)', minHeight:'100vh' }}>
       <Navbar/>
       <div style={{ minHeight:'calc(100vh - 68px)', display:'flex', alignItems:'center', justifyContent:'center', padding:'20px' }}>
-        <div style={{ background:'var(--card)', borderRadius:'20px', padding:'36px', width:'100%', maxWidth:'420px', border:'1px solid var(--card-border)', boxShadow:'var(--card-shadow)', textAlign:'center', transition:'all 0.3s' }}>
+        <div style={{ background:'var(--card)', borderRadius:'20px', padding:'36px', width:'100%', maxWidth:'420px', border:'1px solid var(--card-border)', boxShadow:'var(--card-shadow)', textAlign:'center', transition:'all 0.3s', boxSizing:'border-box' }} className="auth-card">
           <Link to="/" style={{ display:'block', fontSize:'22px', fontWeight:800, marginBottom:'20px' }}>
             <span style={{ color:'#e84040' }}>Galkio</span><span style={{ color:'var(--text)' }}>Food</span>
           </Link>
@@ -93,7 +93,7 @@ export default function ForgotPassword() {
                 ) : (
                   <p style={{ color:'#f59e0b', fontSize:'12px', marginBottom:'8px' }}>⚠️ Email not configured — use this code:</p>
                 )}
-                <div style={{ color: emailSent ? '#10b981' : '#f59e0b', fontSize:'28px', fontWeight:800, letterSpacing:'6px', padding:'10px', background:'var(--input-bg)', borderRadius:'10px', marginBottom:'8px', fontFamily:'monospace' }}>
+                <div style={{ color: emailSent ? '#10b981' : '#f59e0b', fontSize:'28px', fontWeight:800, letterSpacing:'6px', padding:'10px', background:'var(--input-bg)', borderRadius:'10px', marginBottom:'8px', fontFamily:'monospace', overflowX:'auto' }} className="reset-code-box">
                   {resetToken}
                 </div>
                 <button onClick={() => { setCode(resetToken); toast.success('Code copied!'); }}
@@ -128,6 +128,13 @@ export default function ForgotPassword() {
           </p>
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 480px) {
+          .auth-card { padding: 24px 18px !important; border-radius: 16px !important; }
+          .reset-code-box { font-size: 20px !important; letter-spacing: 3px !important; }
+        }
+      `}</style>
     </div>
   );
 }
